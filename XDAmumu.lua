@@ -10,13 +10,18 @@
 	- Auto W if in range of both minions and champs
 ]]
 
+
 if Player.CharName ~= "Amumu" then return end
 
 module("XDAmumu", package.seeall, log.setup)
 clean.module("XDAmumu", clean.seeall, log.setup)
 local CoreEx = _G.CoreEx
 local Libs = _G.Libs
-local ScriptName, Version = "XDAmumu", "1.0"
+local ScriptName = "XDAmumu"
+local VERSION = "1.0.1"
+-- Auto Updating
+_G.CoreEx.AutoUpdate(
+    "https://raw.githubusercontent.com/prispither420/Robur/main/XDAmumu.lua",VERSION)
 --------------------------------------Imports--------------------------------------
 local Menu = Libs.NewMenu
 local Prediction = Libs.Prediction

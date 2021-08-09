@@ -19,9 +19,7 @@ local CoreEx = _G.CoreEx
 local Libs = _G.Libs
 local ScriptName = "XDAmumu"
 local VERSION = "1.0.0"
--- Auto Updating
---_G.CoreEx.AutoUpdate(
---    "https://raw.githubusercontent.com/prispither420/Robur/main/XDAmumu.lua",VERSION)
+
 --------------------------------------Imports--------------------------------------
 local Menu = Libs.NewMenu
 local Prediction = Libs.Prediction

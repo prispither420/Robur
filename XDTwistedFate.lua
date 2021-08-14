@@ -410,7 +410,7 @@ function TwistedFate.Auto()
 	  local cardGacha = Utils.PickACard()
 
 	  if(RPhase == "Gate") then
-		if(cardGacha == "PickACard") then
+		if(cardGacha == "PickACard" and Game.GetTime() - curTime > 1) then
 		W:Cast()  
 		curTime = Game.GetTime()
 		end

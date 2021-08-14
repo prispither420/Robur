@@ -5,12 +5,11 @@
     Champion Data: https://liquipedia.net/leagueoflegends/TwistedFate
 	
   Basic Features:
-    - Basic QW
+	- Basic QW
 	- Wait W stun then Q 
 	- Auto Q if CC-ed
 	- Auto W for selected Card
 	- Auto R Gold Card 
-  TODO:
 
 ]]
 

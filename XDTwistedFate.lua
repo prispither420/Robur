@@ -419,7 +419,7 @@ function TwistedFate.Auto()
 		 local cardColor = "GoldCardLock"
 			   
 			INFO(cardGacha)
-			if (cardGacha == cardColor and Game.GetTime() - curTime > 0.5) then
+			if (cardGacha == cardColor and Game.GetTime() - curTime > 1) then
 				W:Cast()
 				curTime = Game.GetTime()
 			  end

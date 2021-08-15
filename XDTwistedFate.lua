@@ -22,7 +22,7 @@ clean.module("XDTwistedFate", clean.seeall, log.setup)
 local CoreEx = _G.CoreEx
 local Libs = _G.Libs
 local ScriptName = "XDTwistedFate"
-local VERSION = "1.0.1"
+local VERSION = "1.0.2"
 --------------------------------------Imports--------------------------------------
 local Menu = Libs.NewMenu
 local Prediction = Libs.Prediction

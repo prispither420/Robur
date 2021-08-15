@@ -5,11 +5,13 @@
     Champion Data: https://liquipedia.net/leagueoflegends/TwistedFate
 	
   Basic Features:
-	- Basic QW
+    - Basic QW
 	- Wait W stun then Q 
 	- Auto Q if CC-ed
 	- Auto W for selected Card
 	- Auto R Gold Card 
+	- Keybinds for Red and Blue
+  
 
 ]]
 
@@ -189,7 +191,7 @@ function TwistedFate.Logic.W(MustUse, cardChoice)
     W:Cast()
   end
 -- Checks if W is not being cast for 1st time.
-  if (cardGacha == "PickACard" and W:IsReady() and Game.GetTime() - curTime > 0.25) then
+  if (cardGacha == "PickACard" and W:IsReady() and Game.GetTime() - curTime > 1) then
     W:Cast()
 	curTime = Game.GetTime() 
 	if (cardGacha == cardColor) then
@@ -203,18 +205,58 @@ function TwistedFate.OnHeroImmobilized(source, endT)
     if not source.IsEnemy then return end
 
     if not blockList[source.Handle] and Q:IsReady() and Menu.Get("Auto.Q.Use") then
-        if Q:CastOnHitChance(source, Enums.HitChance.VeryHigh) then
+        if Q:CastOnHitChance(source, Enums.HitChance.Immobile) then
             blockList[source.Handle] = Game.GetTime()
             return
         end
     end
     if Q:IsReady() and Menu.Get("Auto.Q.Use") then
-        if Q:CastOnHitChance(source, Enums.HitChance.VeryHigh) then
+        if Q:CastOnHitChance(source, Enums.HitChance.Immobile) then
             return
         end
     end
 end
 
+function TwistedFate.Logic.AutoRed(MustUse)
+  if not MustUse then return false end
+  --local cardChoice = Menu.Get("Combo.CardColor")
+  local cardColor = "RedCardLock"
+   
+  local cardGacha = Utils.PickACard()
+-- Checks if W is already being cast and if so check for chosen card color.
+  if (cardGacha == cardColor) then
+    W:Cast()
+  end
+-- Checks if W is not being cast for 1st time.
+  if (cardGacha == "PickACard" and W:IsReady() and Game.GetTime() - curTime > 1) then
+    W:Cast()
+	curTime = Game.GetTime() 
+	if (cardGacha == cardColor) then
+		W:Cast() 
+		curTime = Game.GetTime() return true end
+  end
+end
+
+function TwistedFate.Logic.AutoBlue(MustUse)
+  if not MustUse then return false end
+  --local cardChoice = Menu.Get("Combo.CardColor")
+  local cardColor = "BlueCardLock"
+
+   
+  local cardGacha = Utils.PickACard()
+-- Checks if W is already being cast and if so check for chosen card color.
+  if (cardGacha == cardColor) then
+    W:Cast()
+  end
+-- Checks if W is not being cast for 1st time.
+  if (cardGacha == "PickACard" and W:IsReady() and Game.GetTime() - curTime > 1) then
+    W:Cast()
+	curTime = Game.GetTime() 
+	if (cardGacha == cardColor) then
+		W:Cast() 
+		curTime = Game.GetTime() return true end
+  end
+end
 
 
 
@@ -270,11 +312,11 @@ function TwistedFate.ClearLogic.W(MustUse, cardChoice)
   local cardGacha = Utils.PickACard()
   local Minion = Utils.GetMinions(Q.Range)
  
-  if (Minion and cardGacha == "PickACard" and W:IsReady() and Game.GetTime() - curTime > 0.25) then
+  if (Minion and cardGacha == "PickACard" and W:IsReady() and Game.GetTime() - curTime > 1) then
     W:Cast()
 	curTime = Game.GetTime() 
   end
-  if (Minion and cardGacha == cardColor and W:IsReady() and Game.GetTime() - curTime > 0.25) then
+  if (Minion and cardGacha == cardColor and W:IsReady() and Game.GetTime() - curTime > 1) then
     W:Cast()
 	curTime = Game.GetTime() 
 	return true end
@@ -321,12 +363,18 @@ function TwistedFate.LoadMenu()
 	  Menu.ColoredText("> W", 0x0066CCFF, false)
 	  Menu.Checkbox("WaveClear.W.Use", "Use", true)
       Menu.Dropdown("WaveClear.CardColor", "Card", 2, CardColors)
-
+    end)
+	Menu.NextColumn()
+	Menu.Separator()
+      Menu.ColumnLayout("Misc", "Card Picker", 1, true, function ()
+	  Menu.ColoredText("KeyBinds", 0xB65A94FF, true)
+      Menu.Keybind("PickBlue.HotKey", "Pick Blue", string.byte('E'))
+	  Menu.Keybind("PickRed.HotKey", "Pick Red", string.byte('T'))
     end)
     Menu.Separator()
     Menu.ColumnLayout("Drawings", "Drawings", 2, true, function ()
       Menu.ColoredText("Auto", 0xB65A94FF, true)
-	  Menu.Checkbox("Auto.Q.Use", "Auto Q", true)
+	  Menu.Checkbox("Auto.Q.Use", "Auto Q (Will Q when enemy is casting or stun)", true)
 	  Menu.Checkbox("Auto.W.Use", "Auto W Card", true)
       Menu.Dropdown("Auto.CardColor", "Card", 2, CardColors)
 	  Menu.Checkbox("Auto.R.Use", "Auto R Gold Card", true)
@@ -382,7 +430,7 @@ function TwistedFate.OnTick()
   for k, v in pairs(blockList) do
       if gameTime > v + 2 then
           blockList[k] = nil
-      end
+	  end
   end
 
 
@@ -393,6 +441,8 @@ function TwistedFate.OnTick()
 
   if TwistedFate.Auto() then return end
 
+  TwistedFate.Logic.AutoBlue(Menu.Get("PickBlue.HotKey"))
+  TwistedFate.Logic.AutoRed(Menu.Get("PickRed.HotKey"))
 
   return true
 end
@@ -418,6 +468,7 @@ function TwistedFate.Auto()
 		 local cardColor = "GoldCardLock"
 			   
 			if (cardGacha == cardColor and Game.GetTime() - curTime > 1) then
+				--INFO(Game.GetTime() - curTime)
 				W:Cast()
 				curTime = Game.GetTime()
 			  end
